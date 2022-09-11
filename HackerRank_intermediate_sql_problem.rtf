@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red69\green85\blue94;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c34118\c40784\c44314;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \
+\
+Problem name: New Companies\
+\
+SELECT a.company_code, a.founder,\
+COUNT(DISTINCT(b.lead_manager_code)) as lm,\
+COUNT(DISTINCT(b.senior_manager_code)) as sm,\
+COUNT(DISTINCT(b.manager_code)) as mgr,\
+COUNT(DISTINCT(b.employee_code)) emp\
+FROM Company a join Employee b on a.company_code = b.company_code\
+GROUP BY 1,2\
+ORDER BY 1\
+\
+\
+\
+\
+Prime number :\
+MS SQL: \
+DECLARE @counter1 int;\
+DECLARE @counter2 int = 3;\
+DECLARE @counter int;\
+DECLARE @output varchar(1000) = '2';\
+\
+WHILE @counter2 <= 1000 \
+BEGIN\
+SET @counter = 0;\
+SET @counter1 = 2\
+\
+WHILE @counter1 <= @counter2/2\
+BEGIN\
+IF @counter2%@counter1 = 0\
+SET @counter = @counter + 1\
+SET @counter1 = @counter1 + 1\
+END;\
+\
+IF @counter = 0\
+SET @output = concat(@output, "&", @counter2)\
+SET @counter2 = @counter2 + 1\
+END;\
+\
+PRINT @output\
+\
+MySQL:\
+\
+with recursive numbers as \
+    (select 1 as number\
+    union all\
+    select number + 1 from numbers \
+    where number < 1000)\
+select group_concat(number separator '&') \
+from \
+(select n1.number, \
+sum(IF(n1.number % n2.number = 0,1,0)) div_count\
+from numbers n1, numbers n2\
+where n2.number >= 1 and n2.number <= n1.number\
+group by n1.number) prime\
+where div_count = 2\
+\
+\
+\
+Weather observation station:20\
+\
+SET @rindex:=-1;\
+\
+SELECT ROUND(AVG(rind_table.LAT_N), 4)\
+FROM\
+\
+    (SELECT @rindex:=@rindex + 1 AS rindex, LAT_N\
+    FROM STATION\
+    ORDER BY LAT_N) AS rind_table\
+WHERE \
+rind_table.rindex IN(FLOOR(@rindex / 2), CEIL(@rindex/2));\
+\
+Top Competitors:\
+\
+select s.hacker_id, name\
+from Submissions s \
+left join Hackers h on h.hacker_id = s.Hacker_id\
+left join Challenges c on c.challenge_id = s.challenge_id\
+left join Difficulty d on d.difficulty_level = c.difficulty_level\
+\
+where s.score =  d.score\
+group by s.hacker_id,name\
+having count(s.hacker_id) > 1\
+order by count(s.hacker_id) desc, s.hacker_id\
+\
+\
+Ollivander\'92s Inventory:\
+\
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\
+select id, age, coins_needed, power\
+from Wands w, Wands_Property wp\
+where w.code = wp.code\
+and wp.is_evil = 0\
+and w.coins_needed = (select min(coins_needed)\
+                     from Wands w1, Wands_Property wp1\
+                     where w1.code = wp1.code\
+                      and w1.code = w.code\
+                     and wp1.is_evil = 0\
+                      and w1.power = w.power\
+                )\
+\
+order by w.power desc, wp.age desc
+\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\
+\
+}
